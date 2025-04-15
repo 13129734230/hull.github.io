@@ -4,22 +4,22 @@ layout: home
 
 hero:
   name: "HuBlog"
-  text: "胡的个人博客"
-  tagline: 及时当勉励、岁月不待人
+  text: "博客"
+  tagline: 赞助商：自己
   actions:
     - theme: brand
       text: 进入博客
-      link: /base/operators
+      link: /base/ts
     - theme: alt
-      text: 个人介绍
+      text: 关于博客
       link: /about/personal-introduction
 
 features:
-  - title: 记录
-    details: 记录工作、学习时遇到的难点亮点。
-  - title: 效率
-    details: 造轮子，用轮子，CtrlCV绝绝子。
-  - title: 回顾
-    details: 学习需持之以恒，也需时常回顾复习。
+  - title: 技术栈
+    details: 梳理技术广度和深度，持续拓展技术栈。
+  - title: 开发增效
+    details: 封装开发常用轮子方法，同步npm包更新。
+  - title: 持续更新
+    details: 技术框架和版本更新迭代快，根据技术变化持续维护和及时更新。
 ---
 

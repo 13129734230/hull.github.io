@@ -1,5 +1,7 @@
 # 介绍
 
-## 留名：Hundefined
+## 留名：Hu
+[//]: # (## 留名：Hundefined)
 
-精通JS、TypeScript、Vue2、Router3、Vuex、Webpack、Vue3、Router4、Pinia、Vite、Uniapp、Node、Nest等单词的拼写，且听闻过Css、Css3，Css才是世界上最好的计算机语言。
+[//]: # (精通JS、TypeScript、Vue2、Router3、Vuex、Webpack、Vue3、Router4、Pinia、Vite、Uniapp、Node、Nest等单词的拼写，且听闻过Css、Css3，Css才是世界上最好的计算机语言。)
+

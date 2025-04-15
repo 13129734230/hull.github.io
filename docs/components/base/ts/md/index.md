@@ -311,6 +311,24 @@ declare enum decEnum {
 ## 类型兼容性
 
 ```ts
+//协变：同属性同类型的情况下，字段多的可以赋值给字段少的。
+//逆变：通常发生在函数的形参上，即同形参属性同类型的情况下，形参属性少的函数可以赋值给形参属性多的函数，反之则不可，被认为是不安全的。
+interface A {
+    a:string,
+    b:number,
+    c:boolean
+}
+interface B {
+    a:string,
+    b:number
+}
+
+let fna = (p:A)=>{}
+let fnb = (p:B)=>{}
+
+fna = fnb
+// fnb = fna//不能将类型“(p: A) => void”分配给类型“(p: B) => void”。参数“p”和“p” 的类型不兼容。类型 "B" 中缺少属性 "c"，但类型 "A" 中需要该属性。
+//双向协变：tsconfig strictFunctionTypes 设置为false 支持双向协变
 //具有两个相同命名的成员对象时，成员数量多的向成员数量少的兼容，向下兼容。
 //关于函数的类型兼容，只比较形参的类型，形参的命名无所谓。
 //详见：https://www.tslang.cn/docs/handbook/type-compatibility.html
@@ -433,7 +451,12 @@ interface Person {
 //...
 ```
 
-## 装饰器 @
+## 装饰器 @Decorator
+::: tip 
+装饰器是一项实验性特性，在未来版本中可能会发生变化。
+
+若要启用实验性的装饰器特性，你必须在命令行或tsconfig.json里启用编译器选项 experimentDecorator:true
+:::
 
 ```ts
 //实验阶段
@@ -467,4 +490,154 @@ function color(value: string) { // 这是一个装饰器工厂
 
 ```ts
 
+```
+
+## 泛型工具
+::: code-group
+```ts [Partial(可选)]
+interface User {
+    name:string,
+    age:number
+}
+type UserTestPartial = Partial<User>
+//原理：
+// type UserPartial<T> = {
+//     [K in keyof T]?:T[K]
+// }
+type UserPartial<T,P extends keyof T> = {
+    [K in P]?:T[K]
+}
+type UserTestPartial2 = UserPartial<User>
+```
+```ts [Required(必选)]
+interface User {
+    name?:string,
+    age?:number
+}
+type UserTestRequired = Required<User>
+//原理：
+// type UserRequired<T> = {
+//     [K in keyof T]-?:T[K]
+// }
+type UserRequired<T,P extends keyof T> = {
+    [K in P]-?:T[K]
+}
+type UserTestRequired2 = UserRequired<User>
+```
+```ts [Pick(选取)]
+interface User {
+    name:string,
+    age:number
+}
+type UserTestPick = Pick<User,'name'>
+//原理：
+type UserPick<T,P extends keyof T> = {
+    [K in P]:T[K]
+}
+type UserTestPick2 = UserPick<User>
+```
+```ts [Exclude(剔除)]
+interface User {
+    name:string,
+    age:number
+}
+type UserTestExclude = Exclude<keyof User,'name'>
+//原理：
+//分解1：'name'|'age' extends 'age'
+//分解2：'name' extends 'age'==>false; 'age' extends 'age'===>true;
+type UserPick<T,K> = T extends K ? never : T;
+
+type UserTestPick2 = UserPick<keyof User,'age'>
+```
+```ts [Omit(剔除属性并生成新类型)]
+interface User {
+    name:string,
+    age:number
+}
+type UserTestOmit = Omit<User,'name'>
+//原理：
+type UserOmit<T,K> = Pick<T,Exclude<keyof T,K>>
+type UserTestOmit2 = UserOmit<User,'age'>
+```
+```ts [Record(约束对象的key:value)]
+type Key = "c" | "x" | "k"
+type Value = "唱" | "跳" | "rap" | "篮球"
+
+let kk:Record<Key,Value> = {
+    "c":"唱",
+    "x":"跳",
+    "k":"rap"
+}
+//原理：
+//对象的key值只能是symbol、string、number;keyof any ==> symbol|string|numbe
+type KeyType = keyof any
+type KkRecord<K extends KeyType,VT> = {
+    [P in K]:T
+}
+```
+```ts [ReturnType(提取函数返回类型)]
+const fn = () => [1,'c',2,'x',3,'k',{}];
+type num = ReturnType<typeof fn>;
+//原理：
+type CustomFn<F extends Function>  = F extends (...args:any[])=> infer Res  ? Res :never;
+```
+:::
+
+
+
+## 实现发布订阅模式
+
+```ts
+//实现发布订阅模式
+//首先捋清楚三个角色，发布者、调度者、订阅者
+
+interface EventFace {
+    on:(name:string,callback:Function)=>void;
+    emit:(name:string,arg:any[])=>void;
+    off:(name:string,callback:Function)=>void;
+    once:(name:string,callback:Function)=>void;
+}
+interface List {
+    [key:string]:Array<Function>
+}
+
+class Dispatch implements EventFace{
+    list:List;
+    constructor(){
+        this.list = {};
+    };
+    on(name:string,callback:Function){
+        let callbackList = this.list[name]
+        callbackList.push(callback);
+        this.list[name] = callbackList;
+    };
+    emit(name:string,...arg:any[]){
+        const eventName = this.list[name];
+        if(eventName){
+            eventName.forEach(fn=>{
+                fn.apply(this,arg)
+            })
+        }else{
+            console.log(name,'事件未监听');
+        }
+    };
+    off(name:string,fn:Function){
+        const eventName = this.list[name];
+        if(eventName && fn){
+            let index = eventName.findIndex(fns=>fns===fn);
+            index>-1?eventName.splice(index,1):''
+        }else{
+            console.log(name,'事件未监听');
+        }
+    };
+    once(name:string,fn:Function){
+        let decorator = (...arg:any[])=>{
+            fn.apply(this,arg);
+            this.off(name,decorator);
+        }
+        this.on(name,decorator);
+    }
+}
+
+const bus = new Dispatch()
 ```

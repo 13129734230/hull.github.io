@@ -1,1 +1,0 @@
-import{d as o,c as s,o as n,K as a,_ as t}from"./framework.ChpDfBYa.js";const c=o({__name:"ConsoleView",setup(r){return(e,l)=>(n(),s("input",a({class:"console-view",readonly:"",placeholder:"console:"},e.$attrs),null,16))}}),_=t(c,[["__scopeId","data-v-63718951"]]);export{_ as default};
