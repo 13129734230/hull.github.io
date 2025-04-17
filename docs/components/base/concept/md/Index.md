@@ -87,4 +87,6 @@ function f() {}
 这与 JavaScript 访问器 `__proto__` 是等价的，后者是非标准的，但许多 JavaScript 引擎实际上实现了它。
 
 为了保持简洁和避免困惑，在表示法中，我们会避免使用 `obj.__proto__` 而是使用 `obj.[[Prototype]]`。
+
+在浏览器控制台中打印复杂类型变量时，`[[Prototype]]`可以理解为该变量的内部属性，`__proto__`则在其中。
 :::
