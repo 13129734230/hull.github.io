@@ -48,3 +48,43 @@ EPSG:3857：Web地图显示标准（平面投影）。
 
 开发中需注意不同坐标系间的转换（如调用API转换工具），避免定位偏移问题。
 :::
+
+## JS原型链
+
+::: details 对象
+```js
+const o = {
+  a: 1,
+  b: 2,
+  // __proto__ 设置了 [[Prototype]]。在这里它被指定为另一个对象字面量。
+  __proto__: {
+    b: 3,
+    c: 4,
+  },
+};
+// o ---> o.__proto__ ---> o.__proto__.__proto__ ---> o.__proto__.__proto__.__proto__
+// { a: 1, b: 2 } ---> { b: 3, c: 4 } ---> Object.prototype ---> null
+```
+:::
+::: details 函数
+```js
+function f() {}
+// f ---> f.prototype ---> f.prototype.__proto__ ---> o.__proto__.__proto__.__proto__
+// f() {} ---> F() {} ---> Object.prototype ---> null
+```
+:::
+::: tip 区别
+对象：一个普通的对象访问原型链通过 `__proto__` 属性，可以访问到该对象的原型对象`(Object.prototype)`，最后访问`__proto__`为null原型链结束。
+
+函数：一个普通的函数访问原型链通过 `prototype` 属性，可以访问到该函数的原型对象，再通过 `__proto__` 属性访问到原型对象`(Object.prototype)`，最后访问 `__proto__` 为null原型链结束。
+:::
+
+::: tip 备注
+根据 ECMAScript 标准，符号 `someObject.[[Prototype]]` 用于指定 someObject 的原型。
+
+使用 `Object.getPrototypeOf()` 和 `Object.setPrototypeOf()` 函数分别访问和修改 [[Prototype]] 内部插槽。
+
+这与 JavaScript 访问器 `__proto__` 是等价的，后者是非标准的，但许多 JavaScript 引擎实际上实现了它。
+
+为了保持简洁和避免困惑，在表示法中，我们会避免使用 `obj.__proto__` 而是使用 `obj.[[Prototype]]`。
+:::
