@@ -2,26 +2,31 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "HuBlog",
+  title: "HxxBlog",
   head: [['link', { rel: 'icon', href: '/hublog/logo.ico' }]],
   base:'/hublog/',
   description: "胡xx的博客",
   markdown: {
-    lineNumbers: true
+    lineNumbers: true,
+    image: {
+      // 默认禁用；设置为 true 可为所有图片启用懒加载。
+      lazyLoading: true
+    }
   },
   themeConfig: {
     // https://vitepress.dev  /reference/default-theme-config
     logo: '/logo.png',
     nav: [
       { text: '首页', link: '/' },
-      { text: '作者', link: '/markdown-examples' }
+      { text: '作者', link: '/about/personal-introduction' }
     ],
 
     sidebar: [
       {
-        text: '关于博客',
+        text: '关于',
         items: [
-          { text: '简单介绍', link: '/about/personal-introduction' }
+          { text: '每日充能', link: '/about/daily-charge' },
+          // { text: '简单介绍', link: '/about/personal-introduction' }
         ]
       },
       // {
@@ -34,9 +39,10 @@ export default defineConfig({
       {
         text: '内容管理',
         items: [
+          { text: '概念篇', link: '/base/concept' },
+          { text: 'css案例', link: '/base/css' },
           { text: 'ts笔记', link: '/base/ts' },
           { text: 'vue2笔记', link: '/base/vue2' },
-          { text: '概念篇', link: '/base/concept' },
           { text: 'vue-cli笔记', link: '/base/vue-cli' },
           { text: '运算符笔记', link: '/base/operators' },
           { text: '通用hooks', link: '/base/basis-hooks' },

@@ -3,16 +3,16 @@
 layout: home
 
 hero:
-  name: "HuBlog"
+  name: "HxxBlog"
   text: "博客"
-  tagline: 赞助商：自己
+  tagline: 赞助商：腾讯、阿里、美团、京东、头条、百度等均无赞助、只有自己。
   actions:
     - theme: brand
       text: 进入博客
-      link: /base/ts
+      link: /base/concept
     - theme: alt
-      text: 关于博客
-      link: /about/personal-introduction
+      text: 每日充能
+      link: /about/daily-charge
 
 features:
   - title: 技术栈
